@@ -1,23 +1,50 @@
 body{
-       margin: 0px;
-}
-
-#TieuDeUser{
-       display: flex;
-       background-color: #fff1ac;
-       height: 50px;
-       align-items: center;
-       justify-content: space-around;
-}
-
+       margin: 0;
+       font-size: 16px;
+}      
 a{
        text-decoration: none;
        color: black;
-       font-size: 18px;
-       padding: 10px 20px;
+
+}
+#TieuDeUser{
+       background-color: #fffec8;
+       height: 80px;
+       display: flex;
+       align-items: center;
+       padding: 0 20px;
+       justify-content: space-between;
+}
+
+.ThanhPhan{
+       display: flex;
+       align-items: center;
+       width: 80%;
+       margin-left: auto;
+       justify-content: space-between;
+}
+
+.ThanhPhan a{
+       padding: 30px 40px;
+}
+
+.ThanhPhan a:hover{
+       background-color: #fffd9c;
+       border-radius: 10px;
+}
+
+.SignLog{
+       display: flex;
+       align-items: center;
+       margin-right: 10px;
+}
+
+.SignLog a{
+       padding: 10px 5px;
        border-radius: 5px;
 }
 
-a:hover{
-       background-color: #ffea83;
+.SignLog a:hover{
+       background-color: #fffec8;
+       text-decoration: underline;
 }
