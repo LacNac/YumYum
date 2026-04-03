@@ -1,0 +1,27 @@
+{% extends "base_manager.html" %}
+{% block content %}
+
+       <h2 class = "deli-mana">Đơn Hàng Đặt Mang Về</h2>
+       <table id="table-deli-mana">
+              <tr>
+                     <th>STT</th>
+                     <th>Tên Khách Hàng</th>
+                     <th>Số Điện Thoại</th>
+                     <th>Địa Chỉ</th>
+                     <th>Thời Gian Đặt Hàng</th>
+                     <th>Trạng Thái</th>
+              </tr>
+
+              {% for order in orders %}
+              <tr>
+                     <td>{{ loop.index }}</td>
+                     <td>{{ order.customer_name }}</td>
+                     <td>{{ order.phone_number }}</td>
+                     <td>{{ order.address }}</td>
+                     <td>{{ order.order_time }}</td>
+                     <td><button type="submit">Đã hoàn thành</button></td>
+              </tr>
+              {% endfor %}
+       </table>
+
+{% endblock %}

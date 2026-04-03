@@ -4,25 +4,27 @@
        <meta charset="UTF-8">
        <meta name="viewport" content="width=device-width, initial-scale=1.0">
        <link rel="stylesheet" href="{{url_for('static', filename='style_user.css')}}">
+       <link rel="stylesheet" href="{{url_for('static', filename='style_deli.css')}}">
+       <link rel="stylesheet" href="{{url_for('static', filename='add_prod.css')}}">
+
        <title>YumYum</title>
 </head>
 <body>
-       <div id="TieuDeUser">
+       <nav id="TieuDeUser">
               <p>YumYum</p>
 
               <div class="ThanhPhan">
-              <a href="#">Đơn mang về</a>
-              <a href="#">Đơn đặt bàn</a>
-              <a href="#">Tổng doanh thu</a>
-              <a href="#">Thêm Sản Phẩm</a>
+              <a href="{{ url_for('manager.delivery')}}">Đơn mang về</a>
+              <a href="{{ url_for('manager.eatin')}}">Đơn đặt bàn</a>
+              <a href="{{ url_for('manager.total')}}">Tổng doanh thu</a>
+              <a href="{{ url_for('manager.add_prod')}}">Thêm Sản Phẩm</a>
+              <a href="{{ url_for('manager.del_prod')}}">Xóa Sản Phẩm</a>
+              </div>
               <div class="SignLog">
                      <p>Trang Quản Lý</p>
               </div>
-       </div>
-              
 
-
-       </div>
+       </nav>
 
 
 
