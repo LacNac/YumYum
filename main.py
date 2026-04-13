@@ -7,7 +7,7 @@ app.register_blueprint(manager_bp)
 @app.route('/')
 @app.route('/manager')
 def home():
-    return render_template('base_manager.html')
+    return render_template('base.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

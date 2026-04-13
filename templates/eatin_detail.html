@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Chi Tiết Đơn Tại Chỗ{% endblock %}
+
+{% block content %}
+{% set order_ids = details | map(attribute='Mã đơn') | unique | list %}
+
+<div class="page-header">
+    <h1>Chi Tiết Tại Chỗ</h1>
+    <span>{{ order_ids | length }} đơn · {{ details | length }} dòng</span>
+    <a href="{{ url_for('manager.eatin') }}" class="btn btn-ghost" style="margin-left:auto">← Danh sách</a>
+</div>
+
+{% if details %}
+    {% for oid in order_ids %}
+    {% set items = details | selectattr('Mã đơn', 'equalto', oid) | list %}
+    <div style="background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:1rem; overflow:hidden;">
+        <div style="padding:0.8rem 1rem; background:var(--bg3); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+            <span style="font-weight:700;">Đơn #{{ oid }}</span>
+            <span class="money">{{ "{:,.0f}".format(items | sum(attribute='Tổng tiền 1 sp')) }}đ</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tên món</th>
+                    <th style="text-align:right">Số lượng</th>
+                    <th style="text-align:right">Đơn giá</th>
+                    <th style="text-align:right">Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item['Tên món'] }}</td>
+                <td style="text-align:right; color:var(--text2)">{{ item['Số lượng'] }}</td>
+                <td style="text-align:right; color:var(--text2)">{{ "{:,.0f}".format(item['Giá 1 sp']) }}đ</td>
+                <td style="text-align:right" class="money">{{ "{:,.0f}".format(item['Tổng tiền 1 sp']) }}đ</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+{% else %}
+<div class="table-wrap"><div class="empty">Không có dữ liệu.</div></div>
+{% endif %}
+{% endblock %}
