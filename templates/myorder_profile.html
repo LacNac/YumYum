@@ -2,63 +2,142 @@
 {% block content %}
 <div class="account-container">
     <h1 class="page-title">My Account</h1>
-    <p class="breadcrumb">Home / My Account</p>
 
     <div class="account-wrapper">
-        <aside class="account-sidebar">
-            <nav>
-                <a href="{{url_for('profile')}}" class="nav-item active">Personal Information</a>
-                <a href="{{url_for('myorders')}}" class="nav-item">My Orders</a>
-                <a href="{{url_for('payment')}}" class="nav-item">Payment Method</a>
-                <a href="{{url_for('password_manager')}}" class="nav-item">Password Manager</a>
-                <a href="{{url_for('home')}}" class="nav-item logout">Logout</a>
-            </nav>
+        <aside class="sidebar">
+            <ul class="categories">
+                <li>
+                    <a href="{{url_for('profile')}}">Personal Information</a>
+                </li>
+                <li>
+                    <a href="{{url_for('myorders')}}">My Orders</a>
+                </li>
+                <li>
+                    <a href="{{url_for('payment')}}">Payment Method</a>
+                </li>
+                <li>
+                    <a href="{{url_for('password_manager')}}">Password Manager</a>
+                </li>
+                <li>
+                    <a href="{{url_for('home')}}">Log Out</a>
+                </li>
+            </ul>
         </aside>
 
-        <main class="account-content">
+<main class="account-content">
             <div class="orders-container">
                 <div class="orders-header-main">
                     <h3>Orders</h3>
-                    <div class="sort-box">
-                        Sort by:
-                        <select class="sort-select">
-                            <option>All</option>
-                            <option>Delivered</option>
-                            <option>Cancelled</option>
-                        </select>
-                    </div>
                 </div>
 
+                {% for order in orders %}
                 <div class="order-card">
                     <div class="order-card-header">
-                        <div class="header-col"><span>Order ID</span><strong>#YUM1254FD</strong></div>
-                        <div class="header-col"><span>Total Payment</span><strong>90000 VND</strong></div>
-                        <div class="header-col"><span>Payment Method</span><strong>MoMo</strong></div>
-                        <div class="header-col"><span>Status</span><strong>Accepted</strong></div>
+                        <div class="header-col"><span>Order ID</span><strong>#{{ order.id }}</strong></div>
+                        <div class="header-col">
+                            <span>Service</span>
+                            <strong>{% if order.loai == 'eat_in' %}🍽️ At Restaurant{% else %}🥡 Take Away{% endif %}</strong>
+                        </div>
+                        <div class="header-col"><span>Total Payment</span><strong>{{ order.total }} VND</strong></div>
+                        <div class="header-col">
+                            {% if order.loai == 'eat_in' %}
+                                <span>Time</span><strong>{{ order.time[:16].replace('T',' ') }}</strong>
+                            {% endif %}
+                        </div>
+                        <div class="header-col"><span>Status</span><strong>{{ order.status }}</strong></div>
                     </div>
 
                     <div class="order-items-list">
+                        {% for item in order['items'] %}
                         <div class="order-product">
-                            <img src="https://i.pinimg.com/736x/22/fb/a6/22fba6691b270300868acc91c71e4312.jpg" alt="Phở">
-                            <div class="product-details">
-                                <h4>Phở bò tái lăn</h4>
-                                <p>Món chính | 2 Qty.</p>
+                            <img src="{{ url_for('static', filename='images/' + item.anh) }}" alt="{{ item.ten }}">
+                            <div class="product-details" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                <div>
+                                    <h4 style="margin: 0;">{{ item.ten }}</h4>
+                                    <p style="margin: 4px 0 0;">Qty: {{ item.qty }}</p>
+                                </div>
+                                <button class="btn-invoice" onclick="openModal('{{ item.ten }}', '{{ item.id }}')">
+    Evaluation
+</button>
                             </div>
                         </div>
+                        {% endfor %}
                     </div>
 
                     <div class="order-card-footer">
-                        <div class="status-badge accepted">Your Order has been Accepted</div>
+                        <div class="status-badge accepted">Your Order has been {{ order.status }}</div>
                         <div class="action-btns">
-                            <button class="btn-track">Track Order</button>
-                            <button class="btn-invoice">Invoice</button>
+                            <button class="btn-invoice">Feedback</button>
                             <button class="btn-cancel">Cancel Order</button>
                         </div>
                     </div>
-                </div>
+                </div> {% endfor %}
 
-                </div>
-        </main>
+            </div> </main>
     </div>
 </div>
+
+<div id="evaluationModal" class="modal-overlay">
+    <div class="modal-content">
+        <span class="close-x" onclick="closeModal()">&times;</span>
+
+        <h3>Evaluate: <span id="evalProductName" style="color: #facc15;">Product</span></h3>
+        <hr style="opacity: 0.2; margin: 15px 0;">
+
+        <form action="/submit-evaluation" method="POST">
+            <input type="hidden" id="evalProductId" name="product_id">
+
+            <div class="rating-section">
+                <p style="font-weight: 600; margin-bottom: 10px;">Your Rating:</p>
+                <div class="stars">
+                    <input type="radio" name="rating" value="5" id="s5"><label for="s5">★</label>
+                    <input type="radio" name="rating" value="4" id="s4"><label for="s4">★</label>
+                    <input type="radio" name="rating" value="3" id="s3"><label for="s3">★</label>
+                    <input type="radio" name="rating" value="2" id="s2"><label for="s2">★</label>
+                    <input type="radio" name="rating" value="1" id="s1"><label for="s1">★</label>
+                </div>
+            </div>
+
+            <div class="feedback-section" style="margin-top: 20px;">
+                <p style="font-weight: 600; margin-bottom: 5px;">Your Feedback:</p>
+                <textarea name="feedback" rows="4" placeholder="Tell us about the taste..." required></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-close-modal" onclick="closeModal()">Close</button>
+                <button type="submit" class="btn-submit-modal">Submit Review</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+function openModal(productName, productId) {
+    const modal = document.getElementById('evaluationModal');
+
+    if (modal) {
+        modal.style.display = 'flex'; // Hiện modal
+        document.getElementById('evalProductName').innerText = productName;
+        document.getElementById('evalProductId').value = productId;
+
+    }
+}
+
+function closeModal() {
+    const modal = document.getElementById('evaluationModal');
+    if (modal) {
+        modal.style.display = 'none'; // Ẩn modal
+
+        // Mở lại cuộn trang web
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Đóng modal khi click ra vùng đen bên ngoài
+window.onclick = function(event) {
+    const modal = document.getElementById('evaluationModal');
+    if (event.target == modal) {
+        closeModal();
+    }
+}
+</script>
 {% endblock %}

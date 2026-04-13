@@ -1,10 +1,14 @@
 .account-container {
-    max-width: 1200px;
+    max-width: 1300px;
     margin: 40px auto;
-    padding: 0 20px;
+    padding: 0 40px;
 }
 
-.page-title { text-align: center; font-size: 32px; margin-bottom: 5px; color: #1a1a1a; }
+.page-title {
+text-align: center;
+font-size: 32px;
+margin-bottom: 40px;
+color: #1a1a1a; }
 .breadcrumb { text-align: center; color: #777; margin-bottom: 40px; font-size: 14px; }
 
 .account-wrapper {
@@ -43,6 +47,8 @@
     padding: 40px;
     border-radius: 15px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-left: 5px;
+    width: auto;
 }
 
 .profile-header {
@@ -162,9 +168,4 @@ textarea {
 
 textarea:focus {
     border-color: #facc15;
-}
-
-/* Ẩn mục Manage Address ở Sidebar vì đã gộp rồi */
-.account-sidebar .nav-item:nth-child(3) {
-    display: none;
 }

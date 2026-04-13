@@ -1,18 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="search-box-side">
-            <form method="get" action="/menu">
-                <button type="submit"><i class="fa fa-search"></i></button>
-                <input type="text" name="keyword" placeholder="Tìm kiếm món ăn..." value="{{ keyword or '' }}">
-                {% if danh_muc %}
-                <input type="hidden" name="category" value="{{ danh_muc }}">
-                {% endif %}
-            </form>
-        </div>
-
 <div class="menu-container">
-
     <aside class="sidebar">
         <ul class="categories">
             <li class="{% if not danh_muc %}active{% endif %}">
@@ -32,23 +21,37 @@
 
     <div class="menu-content">
 
+        <div class="search-box-side">
+            <form method="get" action="/menu">
+                <button type="submit"><i class="fa fa-search"></i></button>
+                <input type="text" name="keyword" placeholder="Tìm kiếm món ăn..." value="{{ keyword or '' }}">
+                {% if danh_muc %}
+                <input type="hidden" name="category" value="{{ danh_muc }}">
+                {% endif %}
+            </form>
+        </div>
+
         <div class="product-grid">
             {% for mon in ds_mon %}
             <div class="product-card">
-                <img src="{{ url_for('static', filename='images/' + mon['Anh']) }}" alt="{{ mon['Ten_mon'] }}">
-
-                <div class="rating">
-                    <h3 class="rating-left">{{ mon["Ten_mon"] }}</h3>
-                    <p class="rating-right">{{ mon["rating"] }} <i class="fas fa-star"></i></p>
+                <div class="card-img">
+                    <img src="{{ url_for('static', filename='images/' + mon['Anh']) }}" alt="{{ mon['Ten_mon'] }}">
                 </div>
 
-                <div class="danh_muc">
-                    <p>{{ mon["Danh_muc"] }}</p>
-                </div>
+                <div class="card-info">
+                    <div class="rating-header">
+                        <h3>{{ mon["Ten_mon"] }}</h3>
+                        <span class="star-rating">{{ mon["rating"] }} <i class="fas fa-star"></i></span>
+                    </div>
 
-                <div class="cost">
-                    <p>{{ mon["Gia"] }} VND</p>
-                    <a href="/add_to_cart/{{ mon['id_mon'] }}" class="add-btn-link">+</a>
+                    <div class="category-tag">
+                        <p>{{ mon["Danh_muc"] }}</p>
+                    </div>
+
+                    <div class="card-footer">
+                        <p class="price">{{ "{:,}".format(mon["Gia"]) }} VND</p>
+                        <a href="/add_to_cart/{{ mon['id_mon'] }}" class="add-btn">+</a>
+                    </div>
                 </div>
             </div>
             {% endfor %}
@@ -58,8 +61,9 @@
             {% if page > 1 %}
             <a href="?page={{ page - 1 }}{% if danh_muc %}&category={{ danh_muc }}{% endif %}{% if keyword %}&keyword={{ keyword }}{% endif %}">⬅ Trước</a>
             {% endif %}
-            <a href="?page={{ page + 1 }}{% if danh_muc %}&category={{ danh_muc }}{% endif %}{% if keyword %}&keyword={{ keyword }}{% endif %}">Sau ➡</a>
+            <a href="?page={{ page + 1 }}{% if danh_muc %}&category={{ danh_muc }}{% endif %}{% if keyword %}&keyword={{ keyword }}{% endif %}" class="next-btn">Sau ➡</a>
         </div>
     </div>
 </div>
+
 {% endblock %}

@@ -1,98 +1,105 @@
-/* Container chính */
+/* Layout tổng thể */
 .menu-container {
     display: flex;
-    padding: 20px 5%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
     gap: 30px;
+    align-items: flex-start;
 }
 
-/* Sidebar tinh tế hơn */
+/* Sidebar */
 .sidebar {
     width: 200px;
+    min-width: 200px;
     background: white;
-    border-radius: 15px;
-    height: fit-content;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    overflow: hidden;
-    width: 200px;
-    min-width: 200px; /* Thêm dòng này để khóa cứng độ rộng 200px */
-    background: white;
+    border-radius: 20px;
+    padding: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 20px;
+
+}
+
+.categories {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .categories li {
-    border: none;      /* Xóa bỏ mọi đường viền đen mặc định */
-    padding: 0;       /* Xóa padding của li */
-    margin-bottom: 5px; /* Khoảng cách giữa các nút */
-    background: none;  /* Xóa nền của li */
-    box-shadow: none;  /* Xóa bóng của li */
+    margin-bottom: 8px;
+background: transparent;
+    overflow: hidden;
 }
 
 .categories li a {
     display: block;
-    padding: 12px 15px;
+    padding: 12px;
     text-decoration: none;
-    border-radius: 10px; /* Bo góc mượt mà */
+    color: #333;
+    border-radius: 10px;
     transition: 0.3s;
     text-align: center;
+    font-weight: 500;
+    margin: 5px 0;
 }
 
-/* Khi mục đó đang được chọn (Active) */
 .categories li.active a {
-    background-color: #f1c40f; /* Màu vàng YUMMY */
-    color: white;             /* Chữ trắng cho nổi */
-    font-weight: bold;
-    box-shadow: 0 4px 10px rgba(241, 196, 15, 0.3); /* Bóng đổ màu vàng nhẹ cho sang */
-    border: none;             /* Đảm bảo không có viền đen */
+    background-color: #f1c40f;
+    color: white;
+    box-shadow: 0 4px 10px rgba(241, 196, 15, 0.3);
 }
 
-/* Hiệu ứng khi di chuột qua các mục khác */
-.categories li a:hover {
-    background-color: #fef9e7; /* Vàng nhạt */
+.categories li a:hover:not(.active) {
+    background-color: #fef9e7;
     color: #f1c40f;
 }
 
+/* Khu vực nội dung bên phải */
+.menu-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+/* Thanh Search căn phải */
 .search-box-side {
     width: 100%;
     display: flex;
-    justify-content: flex-end; /* Đẩy cái form sang phải */
+    justify-content: flex-end;
     margin-bottom: 25px;
 }
 
 .search-box-side form {
     display: flex;
     align-items: center;
-    width: 280px; /* Cố định độ dài thanh search */
+    width: 300px;
     background: #fff;
     border-radius: 30px;
-    padding: 5px 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.search-box-side button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    padding-right: 8px;
+    padding: 8px 18px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
 .search-box-side input {
     flex: 1;
     border: none;
     outline: none;
-    padding: 8px 0;
-    background: transparent;
+    padding-left: 10px;
+    font-size: 14px;
 }
 
-.menu-content {
-    flex: 1; /* Để nó tự chiếm phần còn lại của hàng */
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
+.search-box-side button {
+    background: none;
+    border: none;
+    color: #777;
+    cursor: pointer;
 }
 
+/* Lưới sản phẩm (Grid) */
 .product-grid {
     display: grid;
-    /* Ép nó phải chia cột, auto-fill sẽ tự tính số cột dựa trên bề ngang */
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 25px;
     width: 100%;
@@ -101,98 +108,98 @@
 /* Card món ăn */
 .product-card {
     background: #fff;
-    border-radius: 15px;
+    border-radius: 20px;
     overflow: hidden;
-    transition: 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .product-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
 }
 
-.product-card img {
+.card-img img {
     width: 100%;
     height: 180px;
     object-fit: cover;
 }
 
-/* SỬA LỖI KHOẢNG CÁCH GẦN NHAU */
-.rating {
+.card-info {
+    padding: 15px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 15px 0 15px;
+    flex-direction: column;
+    flex: 1;
 }
 
-.rating h3 {
+.rating-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 5px;
+}
+
+.rating-header h3 {
     margin: 0;
     font-size: 17px;
     color: #002795;
-    font-family: Verdana;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.rating-right {
-    margin: 0;
+.star-rating {
     color: #f1c40f;
     font-weight: bold;
+    font-size: 14px;
 }
 
-.danh_muc {
-    padding: 2px 15px; /* Giảm padding để sát tên món */
-}
-
-.danh_muc p {
+.category-tag p {
     margin: 0;
-    font-size: 16px;
-    color: #002795;
-    font-family: Verdana;
-    font-weight: normal;
+    font-size: 14px;
+    color: #666;
 }
 
-.cost {
-    margin-top: auto; /* Đẩy xuống đáy card */
-    padding: 15px;
+.card-footer {
+    margin-top: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-top: 15px;
 }
 
-.cost p {
+.price {
     margin: 0;
-    font-weight: bold;
+    font-weight: 700;
     font-size: 16px;
     color: #2d3436;
 }
 
-/* Nút cộng xinh xắn */
-.add-btn-link {
+.add-btn {
     text-decoration: none;
     background-color: #2ed573;
     color: white;
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 20px;
     transition: 0.2s;
 }
 
-.add-btn-link:hover {
+.add-btn:hover {
     background-color: #26af5f;
     transform: scale(1.1);
 }
 
-/* Phân trang căn giữa */
+/* Phân trang */
 .pagination {
-    width: 100%;
-    text-align: center;
     margin: 40px 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }
 
 .pagination a {
@@ -201,12 +208,12 @@
     background: #fff;
     color: #333;
     border-radius: 25px;
-    margin: 0 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     transition: 0.3s;
+    font-weight: 500;
 }
 
 .pagination a:hover {
-    background: #333;
-    color: #fff;
+    background: #f1c40f;
+    color: white;
 }

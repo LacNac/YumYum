@@ -41,10 +41,55 @@
 
     <div class="order-summary">
         <h3>Order Summary</h3>
-        <div class="coupon-box">
-            <input type="text" placeholder="Discount Voucher" class="coupon-input">
-            <button class="btn-apply">Apply</button>
+        <div class="service-selection" style="margin-bottom: 20px;">
+    <p style="font-weight: bold; margin-bottom: 10px;">Service Method:</p>
+    <div style="display: flex; gap: 20px;">
+        <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
+            <input type="radio" name="loai_don" value="eat_in" {{ 'checked' if loai == 'eat_in' else '' }} onchange="updateService(this.value)" onclick="toggleDineInFields(true)">
+            <span>🍽️ At Restaurant</span>
+        </label>
+        <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
+            <input type="radio" name="loai_don" value="deli" {{ 'checked' if loai == 'deli' else '' }} onchange="updateService(this.value)" onclick="toggleDineInFields(false)">
+            <span>🥡 Take Away</span>
+        </label>
+    </div>
+            <script>
+function updateService(value) {
+    fetch('/update_service', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ loai_don: value })
+    })
+}
+</script>
+          <div id="dine-in-details" style="display: none; background: #f9f9f9; padding: 10px; border-radius: 8px;">
+        <div style="margin-bottom: 12px;">
+            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Arrival Date & Time:</label>
+            <input type="datetime-local" name="arrival_datetime" value="{{ thoigian }}"  onchange="updateTime(this.value)"
+                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-family: sans-serif;">
         </div>
+    </div>
+            <script>
+function toggleDineInFields(show) {
+    const details = document.getElementById('dine-in-details');
+    details.style.display = show ? 'block' : 'none';
+
+    const dateTimeInput = document.querySelector('input[name="arrival_datetime"]');
+    dateTimeInput.required = show;
+}
+                function updateTime(value) {
+    fetch('/update_time', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ thoigian: value })
+    })
+}
+</script>
+</div>
 
         <div class="summary-line">
             <span>Sub Total</span>
