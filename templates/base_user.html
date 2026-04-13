@@ -1,37 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-       <meta charset="UTF-8">
-       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <link rel="stylesheet" href="{{url_for('static', filename='style_user.css')}}">
-       <title>YumYum</title>
-</head>
-<body>
-       <div id="TieuDeUser">
-              <p>YumYum</p>
+{% extends "base.html" %}
+{% block content %}
+<!-- Transfer image -->
+<div class="food">
+    <div class="foods" id="foods">
+        <img src="https://i.pinimg.com/1200x/02/37/ca/0237cad51877cfcb70c46c491d38f245.jpg">
+        <img src="https://i.pinimg.com/1200x/48/91/21/489121278214d55e6526e03910113abd.jpg">
+        <img src="https://i.pinimg.com/1200x/48/91/21/489121278214d55e6526e03910113abd.jpg">
+        <img src="https://i.pinimg.com/1200x/48/91/21/489121278214d55e6526e03910113abd.jpg">
+        <img src="https://i.pinimg.com/1200x/48/91/21/489121278214d55e6526e03910113abd.jpg">
+    </div>
 
-              <div class="ThanhPhan">
-              <a href="#">Trang Chủ</a>
-              <a href="#">Thực Đơn</a>
-              <a href="#">Giỏ Hàng</a>
-              <a href="#">About Us</a>
-              <div class="SignLog">
-                     <a href="#">Đăng Nhập</a>
-                     <p>/</p>
-                     <a href="#">Đăng Kí</a>
-              </div>
-       </div>
-              
+    <button class="btn prev" onclick="prevSlide()">❮</button>
+    <button class="btn next" onclick="nextSlide()">❯</button>
+    <div class="dots" id="dots"></div>
+</div>
+<script src="{{url_for('static', filename='user_home.js')}}" ></script>
+
+<!-- Our menu -->
+<div class="our_menu">
+<h2 class="text">WHY CHOOSE US?</h2>
+<div class="list_menu">
+    <div class="div_menu">
+        <img src="https://i.pinimg.com/1200x/ef/42/d2/ef42d2b194710449677cd9dc51952a25.jpg">
+        <h3>Phở gà tái</h3>
+        <p>Mĩ vị nhân gian</p>
+    </div>
+
+    <div class="div_menu">
+        <img src="https://i.pinimg.com/1200x/b6/15/da/b615da2d704ace5b6cea148cfc888e53.jpg">
+        <h3>Thịt Kho Trứng</h3>
+        <p>Sự kết hợp hài hào giữa thịt ba chỉ với trứng vịt</p>
+    </div>
+
+    <div class="div_menu">
+        <img src="https://i.pinimg.com/1200x/a2/c3/31/a2c33191ad5463acb80142eabcde22b8.jpg">
+        <h3>Bún trộn Nam Bộ</h3>
+        <p>Xuất thân từ đường Nam Bộ, không phải ở Nam Trung Bộ</p>
+    </div>
+
+    <div class="div_menu">
+        <img src="https://i.pinimg.com/736x/72/67/c6/7267c6996507845784c99789aac1ca23.jpg">
+        <h3>Cơm tấm sườn</h3>
+        <p>Sự lựa chọn tuyệt vời nếu thèm cơm</p>
+    </div>
+</div>
+</div>
+
+<!-- About us -->
+<div class="about_us_home">
+    <h2 class="text">ABOUT US</h2>
+    <div class="content_intro">
+        <div>
+        <h3>Nhà hàng của chúng tôi mang đến những món ăn ngon, chất lượng trong không gian ấm cúng và thân thiện, là nơi lý tưởng để bạn tận hưởng những bữa ăn đáng nhớ.
+</h3>
+            <button class="btn-about">VIEW MORE</button>
+        </div>
+        <img src="https://i.pinimg.com/736x/90/8a/b9/908ab9a64b1b506ec6c5221c7758e72b.jpg">
+    </div>
+</div>
 
 
-       </div>
-
-
-
-
-
-       {% block content %}
-
-       {% endblock %}
-</body>
-</html>
+{% endblock %}

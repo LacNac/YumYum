@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{{url_for('static', filename='style_user.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='menu.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='profile.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='cart.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='about_us.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='myorder_profile.css')}}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>YumYum</title>
+</head>
+
+<body>
+<header class="navbar">
+    <div class="nav-left">
+       <h2>YUMMY</h2>
+    </div>
+
+    <div class="menu-toggle" id="menu-toggle">☰</div>
+
+    <ul class="nav-center" id="nav-menu">
+        <li><a href="{{url_for('home')}}" class="nav-a">Home</a></li>
+        <li><a href="{{url_for('menu')}}" class="nav-a">Menu</a></li>
+        <li><a href="{{url_for('cart')}}" class="nav-a">Cart</a></li>
+        <li><a href="{{url_for('about_us')}}" class="nav-a">About us</a></li>
+    </ul>
+
+    <div class="nav-right">
+        <ul class="nav-right">
+            <li><a href="{{url_for('profile')}}" class="nav-a">Log in</a></li>
+            <li><a href="{{url_for('profile')}}" class="nav-a">Sign up</a></li>
+        </ul>
+    </div>
+</header>
+
+<script>
+    const toggle = document.getElementById("menu-toggle");
+    const menu = document.getElementById("nav-menu");
+
+    toggle.onclick = () => {
+        menu.classList.toggle("show");
+    }
+</script>
+
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-content">
+            <div class="contact-info">
+                <h5>Địa chỉ liên hệ</h5>
+                <p>Phòng 610, Tòa A2, Đại học Kinh tế Quốc dân</p>
+                <p>Điện thoại: 0123456789</p>
+                <p>Email: 12333@gmail.com</p>
+            </div>
+
+            <div class="qr-code">
+                <img src="https://i.pinimg.com/736x/f3/ee/ef/f3eeef66748213d7fbf242b73f3a192d.jpg" alt="QR Code">
+            </div>
+        </div>
+
+        <hr>
+        <p class="copyright">Bản quyền thuộc về Tui</p>
+    </div>
+</footer>
+</body>
+</html>

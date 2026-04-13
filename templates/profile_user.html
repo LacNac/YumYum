@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="account-container">
+    <h1 class="page-title">My Account</h1>
+    <p class="breadcrumb">Home / My Account</p>
+
+    <div class="account-wrapper">
+        <aside class="account-sidebar">
+            <nav>
+                <a href="{{url_for('profile')}}" class="nav-item active">Personal Information</a>
+                <a href="{{url_for('myorders')}}" class="nav-item">My Orders</a>
+                <a href="{{url_for('payment')}}" class="nav-item">Payment Method</a>
+                <a href="{{url_for('password_manager')}}" class="nav-item">Password Manager</a>
+                <a href="{{url_for('home')}}" class="nav-item logout">Logout</a>
+            </nav>
+        </aside>
+
+        <main class="account-content">
+            <div class="profile-header">
+                <div class="avatar-wrapper">
+                    <img src="https://i.pinimg.com/736x/0d/64/98/0d64989794b1fd4c3d891e94b4ca59d7.jpg" alt="Avatar">
+                    <button class="edit-avatar-btn"><i class="fas fa-camera"></i></button>
+                </div>
+            </div>
+
+            <form class="profile-form">
+    <h3 class="form-section-title">Personal Information</h3>
+    <div class="form-row">
+        <div class="form-group">
+            <label>First Name *</label>
+            <input type="text" value="HLE" placeholder="First Name">
+        </div>
+        <div class="form-group">
+            <label>Last Name *</label>
+            <input type="text" value="Gumayusi" placeholder="Last Name">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Email *</label>
+        <input type="email" value="example@gmail.com">
+    </div>
+
+    <div class="form-group">
+        <label>Phone *</label>
+        <input type="text" value="+0123-456-789">
+    </div>
+
+    <div class="form-group">
+        <label>Gender *</label>
+        <select>
+            <option>Male</option>
+            <option selected>Female</option>
+            <option>Other</option>
+        </select>
+    </div>
+
+    <hr class="form-divider">
+
+    <h3 class="form-section-title">Delivery Address</h3>
+    <div class="form-group">
+        <label>Street Address *</label>
+        <input type="text" placeholder="Số nhà, tên đường...">
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label>City / Province *</label>
+            <input type="text" placeholder="Tỉnh / Thành phố">
+        </div>
+        <div class="form-group">
+            <label>District *</label>
+            <input type="text" placeholder="Quận / Huyện">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Note for Courier</label>
+        <textarea placeholder="Ghi chú cho shipper (ví dụ: Gọi trước khi giao, cổng sau...)"></textarea>
+    </div>
+
+    <button type="submit" class="btn-update">Update All Changes</button>
+</form>
+        </main>
+    </div>
+</div>
+{% endblock %}

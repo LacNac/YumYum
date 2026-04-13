@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="cart-wrapper">
+        <div class="cart-items-section">
+            <div class="cart-header">
+                <div>Product</div>
+                <div class="quantity">Quantity</div>
+                <div class="total">Total</div>
+                <div class="delete">Delete</div>
+            </div>
+
+            {% for item in items %}
+            <div class="cart-item">
+
+                <div class="product-info">
+                    <img src="{{ url_for('static', filename='images/' + item.mon['Anh']) }}" class="product-img">
+                    <div>
+                        <div class="product-name">{{ item.mon["Ten_mon"] }}</div>
+                        <div class="product-weight">{{ item.mon["Danh_muc"] }}</div>
+                    </div>
+                </div>
+
+                <div class="quantity-control">
+    <a href="/decrease/{{ item.mon['id_mon'] }}" class="qty-btn">−</a>
+    <span class="qty-num">{{ item.qty }}</span>
+    <a href="/increase/{{ item.mon['id_mon'] }}" class="qty-btn">+</a>
+</div>
+
+                <div class="subtotal">{{ item.subtotal }} VND</div>
+
+
+                <a href="/remove/{{ item.mon['id_mon'] }}">
+                    <button class="delete-btn">
+                        <i class="fas fa-trash-alt"></i></button>
+                </a>
+
+            </div>
+            {% endfor %}
+
+        </div>
+
+    <div class="order-summary">
+        <h3>Order Summary</h3>
+        <div class="coupon-box">
+            <input type="text" placeholder="Discount Voucher" class="coupon-input">
+            <button class="btn-apply">Apply</button>
+        </div>
+
+        <div class="summary-line">
+            <span>Sub Total</span>
+            <span>{{ total }} VND</span>
+        </div>
+        <div class="summary-line">
+            <span>Taxes</span>
+            <span style="font-weight: 600;">0 VND</span>
+        </div>
+        <div class="summary-line">
+            <span>Coupon Discount</span>
+            <span style="font-weight: 600;">0 VND</span>
+        </div>
+
+        <div class="summary-line total">
+            <span>Total</span>
+            <span>{{ total }} VND</span>
+        </div>
+
+        <button class="btn-checkout">Pay bill</button>
+    </div>
+
+</div>
+
+<div id="paymentModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>Xác nhận thanh toán</h2>
+        <p>Tổng tiền của bạn là: <strong>{{ total }} VND</strong></p>
+        <img src="{{ url_for('static', filename='images/QR.jpg') }}" class="qr_pay">
+        <button class="confirm-btn">Hoàn tất đặt hàng</button>
+    </div>
+</div>
+<script src="{{url_for('static', filename='paybill.js')}}"></script>
+
+{% endblock %}

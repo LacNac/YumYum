@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="account-container">
+    <h1 class="page-title">My Account</h1>
+    <p class="breadcrumb">Home / My Account</p>
+
+    <div class="account-wrapper">
+        <aside class="account-sidebar">
+            <nav>
+                <a href="{{url_for('profile')}}" class="nav-item active">Personal Information</a>
+                <a href="{{url_for('myorders')}}" class="nav-item">My Orders</a>
+                <a href="{{url_for('payment')}}" class="nav-item">Payment Method</a>
+                <a href="{{url_for('password_manager')}}" class="nav-item">Password Manager</a>
+                <a href="{{url_for('home')}}" class="nav-item logout">Logout</a>
+            </nav>
+        </aside>
+
+        <main class="account-content">
+            <div class="orders-container">
+                <div class="orders-header-main">
+                    <h3>Orders</h3>
+                    <div class="sort-box">
+                        Sort by:
+                        <select class="sort-select">
+                            <option>All</option>
+                            <option>Delivered</option>
+                            <option>Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="order-card">
+                    <div class="order-card-header">
+                        <div class="header-col"><span>Order ID</span><strong>#YUM1254FD</strong></div>
+                        <div class="header-col"><span>Total Payment</span><strong>90000 VND</strong></div>
+                        <div class="header-col"><span>Payment Method</span><strong>MoMo</strong></div>
+                        <div class="header-col"><span>Status</span><strong>Accepted</strong></div>
+                    </div>
+
+                    <div class="order-items-list">
+                        <div class="order-product">
+                            <img src="https://i.pinimg.com/736x/22/fb/a6/22fba6691b270300868acc91c71e4312.jpg" alt="Phở">
+                            <div class="product-details">
+                                <h4>Phở bò tái lăn</h4>
+                                <p>Món chính | 2 Qty.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-card-footer">
+                        <div class="status-badge accepted">Your Order has been Accepted</div>
+                        <div class="action-btns">
+                            <button class="btn-track">Track Order</button>
+                            <button class="btn-invoice">Invoice</button>
+                            <button class="btn-cancel">Cancel Order</button>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+        </main>
+    </div>
+</div>
+{% endblock %}
