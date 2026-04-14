@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{{url_for('static', filename='myorder_profile.css')}}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <title>YumYum</title>
+    <title>YumMy</title>
 </head>
 
 <body>
@@ -32,10 +32,13 @@
     </ul>
 
     <div class="nav-right">
+        {% if session.get('user_id') %}
+        <a href="/profile" class="nav-a">{{ session.get('ten_kh') }}</a>
+        {% else %}
         <ul class="nav-right">
-            <li><a href="{{url_for('profile')}}" class="nav-a">Log in</a></li>
-            <li><a href="{{url_for('profile')}}" class="nav-a">Sign up</a></li>
+            <li><a href="{{url_for('profile')}}" class="nav-a">Log in/Sign up</a></li>
         </ul>
+        {% endif %}
     </div>
 </header>
 

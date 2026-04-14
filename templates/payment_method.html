@@ -2,17 +2,23 @@
 {% block content %}
 <div class="account-container">
     <h1 class="page-title">My Account</h1>
-    <p class="breadcrumb">Home / My Account</p>
 
-    <div class="account-wrapper">
-        <aside class="account-sidebar">
-            <nav>
-                <a href="{{url_for('profile')}}" class="nav-item active">Personal Information</a>
-                <a href="{{url_for('myorders')}}" class="nav-item">My Orders</a>
-                <a href="{{url_for('payment')}}" class="nav-item">Payment Method</a>
-                <a href="{{url_for('password_manager')}}" class="nav-item">Password Manager</a>
-                <a href="{{url_for('home')}}" class="nav-item logout">Logout</a>
-            </nav>
+        <div class="account-wrapper">
+        <aside class="sidebar">
+            <ul class="categories">
+                <li>
+                    <a href="{{url_for('profile')}}">Personal Information</a>
+                </li>
+                <li>
+                    <a href="{{url_for('myorders')}}">My Orders</a>
+                </li>
+                <li>
+                    <a href="{{url_for('password_manager')}}">Password Manager</a>
+                </li>
+                <li>
+                    <a href="{{url_for('home')}}">Log Out</a>
+                </li>
+            </ul>
         </aside>
 
 
