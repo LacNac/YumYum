@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Đơn Giao Hàng{% endblock %}
+
+{% block content %}
+{% set pending = orders | selectattr('Trạng thái', 'equalto', 'Chưa làm') | list %}
+{% set done    = orders | selectattr('Trạng thái', 'equalto', 'Đã làm')   | list %}
+
+<div class="page-header">
+    <h1>Giao Hàng</h1>
+    <span>{{ orders | length }} đơn</span>
+    <a href="{{ url_for('manager.deli_chitiet') }}" class="btn btn-ghost" style="margin-left:auto">Chi tiết món →</a>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Chờ Giao</div>
+        <div class="stat-value" style="color:var(--pending)">{{ pending | length }}</div>
+        <div class="stat-sub">Đơn chưa xử lý</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Hoàn Thành</div>
+        <div class="stat-value" style="color:var(--success)">{{ done | length }}</div>
+        <div class="stat-sub">Đã giao thành công</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Tổng Thu</div>
+        <div class="stat-value">{{ "{:,.0f}".format(orders | sum(attribute='Tổng tiền đơn')) }}đ</div>
+        <div class="stat-sub">Tất cả đơn</div>
+    </div>
+</div>
+
+<div class="table-wrap">
+    {% if orders %}
+    <table>
+        <thead>
+            <tr>
+                <th>Mã KH</th>
+                <th>Mã Đơn</th>
+                <th>Địa chỉ</th>
+                <th>SĐT</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+        <tr>
+            <td style="color:var(--text2)">#{{ order['Mã KH'] }}</td>
+            <td><strong>#{{ order['Mã Đơn'] }}</strong></td>
+            <td style="max-width:200px; word-break:break-word; font-size:0.82rem;">{{ order['Địa chỉ'] }}</td>
+            <td style="font-variant-numeric:tabular-nums; color:var(--text2)">{{ order['SĐT'] }}</td>
+            <td class="money">{{ "{:,.0f}".format(order['Tổng tiền đơn']) }}đ</td>
+            <td>
+                {% if order['Trạng thái'] == 'Đã làm' %}
+                    <span class="badge badge-done">Hoàn thành</span>
+                {% else %}
+                    <span class="badge badge-pending">Chưa làm</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if order['Trạng thái'] != 'Đã làm' %}
+                <form action="{{ url_for('manager.update_status_deli', id_don=order['Mã Đơn']) }}" method="POST" style="display:inline">
+                    <button type="submit" class="btn btn-primary">✓ Hoàn thành</button>
+                </form>
+                {% else %}
+                <span style="color:var(--text2); font-size:0.8rem;">—</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty">Không có đơn giao hàng nào.</div>
+    {% endif %}
+</div>
+{% endblock %}
