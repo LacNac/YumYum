@@ -4,7 +4,7 @@ import re
 from manager import manager_bp
 
 app = Flask(__name__)
-app.secret_key = "abc123"  # bắt buộc để dùng session
+app.secret_key = "abc123"
 app.register_blueprint(manager_bp)
 
 @app.route('/Manager')
@@ -49,9 +49,6 @@ def login():
             return redirect('/home')
         else:
             return render_template('login.html', error="Sai tài khoản hoặc mật khẩu")
-        
-
-        
 
     return render_template('login.html')
 
