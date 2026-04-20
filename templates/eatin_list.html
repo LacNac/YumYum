@@ -6,7 +6,7 @@
 {% set done    = orders | selectattr('Trạng thái', 'equalto', 'Đã làm')   | list %}
 
 <div class="page-header">
-    <h1>🍽 Ăn Tại Chỗ</h1>
+    <h1>Ăn Tại Chỗ</h1>
     <span>{{ orders | length }} đơn</span>
     <a href="{{ url_for('manager.eatin_chitiet') }}" class="btn btn-ghost" style="margin-left:auto">Chi tiết món →</a>
 </div>

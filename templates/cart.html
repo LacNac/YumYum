@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="cart-wrapper">
+        <div class="cart-items-section">
+            <div class="cart-header">
+                <div>Món ăn</div>
+                <div class="quantity">Số lượng</div>
+                <div class="total">Thành tiền</div>
+                <div class="delete">Hủy</div>
+            </div>
+
+            {% for item in items %}
+            <div class="cart-item">
+
+                <div class="product-info">
+                    <img src="{{ url_for('static', filename='images/' + item.mon['Anh']) }}" class="product-img">
+                    <div>
+                        <div class="product-name">{{ item.mon["Ten_mon"] }}</div>
+                        <div class="product-weight">{{ item.mon["Danh_muc"] }}</div>
+                    </div>
+                </div>
+
+                <div class="quantity-control">
+    <a href="/decrease/{{ item.mon['id_mon'] }}" class="qty-btn">−</a>
+    <span class="qty-num">{{ item.qty }}</span>
+    <a href="/increase/{{ item.mon['id_mon'] }}" class="qty-btn">+</a>
+</div>
+
+                <div class="subtotal">{{ item.subtotal }} VND</div>
+
+
+                <a href="/remove/{{ item.mon['id_mon'] }}">
+                    <button class="delete-btn">
+                        <i class="fas fa-trash-alt"></i></button>
+                </a>
+
+            </div>
+            {% endfor %}
+
+        </div>
+
+    <div class="order-summary">
+        <h3>Chi tiết đơn hàng</h3>
+        <div class="service-selection" style="margin-bottom: 20px;">
+    <p style="font-weight: bold; margin-bottom: 10px;">Hình thức:</p>
+    <div style="display: flex; gap: 20px;">
+        <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
+            <input type="radio" name="loai_don" value="eat_in" {{ 'checked' if loai == 'eat_in' else '' }} onchange="updateService(this.value)" onclick="toggleDineInFields(true)">
+            <span>Dùng tại chỗ</span>
+        </label>
+        <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
+            <input type="radio" name="loai_don" value="deli" {{ 'checked' if loai == 'deli' else '' }} onchange="updateService(this.value)" onclick="toggleDineInFields(false)">
+            <span>Mang về</span>
+        </label>
+    </div>
+
+          <div id="dine-in-details" style="display: none; background: #f9f9f9; padding: 10px; border-radius: 8px;">
+        <div style="margin-bottom: 12px;">
+            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Giờ nhận bàn:</label>
+            <input type="datetime-local" name="arrival_datetime" value="{{ thoigian }}"  onchange="updateTime(this.value)"
+                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-family: sans-serif;">
+        </div>
+    </div>
+</div>
+
+        <div class="summary-line">
+            <span>Tổng tiền</span>
+            <span>{{ total }} VND</span>
+        </div>
+        <div class="summary-line">
+            <span>Thuế</span>
+            <span style="font-weight: 600;">0 VND</span>
+        </div>
+        <div class="summary-line">
+            <span>Ưu đãi</span>
+            <span style="font-weight: 600;">0 VND</span>
+        </div>
+
+        <div class="summary-line total">
+            <span>Tổng</span>
+            <span>{{ total }} VND</span>
+        </div>
+
+        <button class="btn-checkout" id="pay-bill-btn">Thanh toán</button>
+    </div>
+
+</div>
+
+<div id="payment-modal" class="payment_content">
+    <div class="payment_content-content">
+        <span class="close-btn">&times;</span>
+
+        <div id="qr-section">
+            <h2 style="margin-top: 10px; font-size: 20px;">Quét mã QR để thanh toán</h2>
+            <p style="font-weight: bold; color: var(--danger-color); font-size: 18px;">Tổng: {{ total }} VND</p>
+            <div class="qr-container">
+                {% if qr_url %}
+                    <img src="{{ qr_url }}" class="qr_pay" alt="QR Code">
+                {% else %}
+                    <p>Chưa có mã QR</p>
+                {% endif %}
+            </div>
+            <div id="loading-status" style="color: var(--success-color); font-weight: 600; margin-top: 15px;">
+                ⏳ Đang chờ hệ thống xác nhận...
+            </div>
+        </div>
+
+        <div id="success-section" style="display: none; padding: 20px;">
+            <div class="success-animation">
+                <div class="check-icon" style="font-size: 80px; color: var(--success-color);">✔️</div>
+            </div>
+            <h2 style="color: var(--success-color); margin-bottom: 10px;">Thanh toán thành công!</h2>
+            <p>Đơn hàng của bạn đang được <strong>Yummy</strong> chuẩn bị.</p>
+            <p style="font-size: 13px; color: #888; margin-top: 15px;">Tự động chuyển trang sau 3 giây...</p>
+        </div>
+    </div>
+</div>
+<script>
+    // Khai báo biến quan trọng cho JS
+    const ORDER_ID = "{{ order_id }}";
+
+    // Các hàm xử lý cập nhật (đưa vào đây để tránh lỗi file JS riêng không nhận)
+    function updateService(value) {
+        fetch('/update_service', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ loai_don: value })
+        });
+    }
+
+    function toggleDineInFields(show) {
+        const details = document.getElementById('dine-in-details');
+        if (details) details.style.display = show ? 'block' : 'none';
+    }
+
+    function updateTime(value) {
+        fetch('/update_time', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ thoigian: value })
+        });
+    }
+</script>
+<script src="{{ url_for('static', filename='paybill.js') }}"></script>
+
+{% endblock %}

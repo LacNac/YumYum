@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="account-container">
+    <h1 class="page-title">Đơn hàng của tôi</h1>
+
+    <div class="account-wrapper">
+        <aside class="sidebar">
+            <ul class="categories_about">
+                <li>
+                    <a href="{{ url_for('profile') }}"
+                       class="nav-account {% if request.endpoint == 'profile' %}active{% endif %}">
+                        Thông tin cá nhân
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('myorders') }}"
+                       class="nav-account {% if request.endpoint == 'myorders' %}active{% endif %}">
+                        Đơn hàng của tôi
+                    </a></li>
+                <li>
+                    <a href="{{ url_for('password_manager') }}"
+                       class="nav-account {% if request.endpoint == 'password_manager' %}active{% endif %}">
+                        Đổi mật khẩu
+                    </a></li>
+                <li>
+                    <a href="{{url_for('logout')}}" class="nav-account">Log Out</a>
+                </li>
+            </ul>
+        </aside>
+        <main class="account-content">
+            <div class="orders-container">
+                {% for order in orders %}
+                <div class="order-card">
+                    <div class="order-card-header">
+                        <div class="header-col"><span>Mã đơn</span><strong>#{{ order.id }}</strong></div>
+                        <div class="header-col">
+                            <span>Hình thức</span>
+                            <strong>{% if order.loai == 'eat_in' %}Đặt bàn{% else %}Mang về{% endif
+                                %}</strong>
+                        </div>
+                        <div class="header-col"><span>Thành tiền</span><strong>{{ order.total }} VND</strong></div>
+                        <div class="header-col">
+                            {% if order.loai == 'eat_in' %}
+                            <span>Thời gian</span><strong>{{ order.time[:16].replace('T',' ') }}</strong>
+                            {% endif %}
+                        </div>
+                        <div class="header-col"><span>Trạng thái</span><strong>{{ order.status }}</strong></div>
+                    </div>
+
+                    <div class="order-items-list">
+                        {% for item in order['items'] %}
+                        <div class="order-product">
+                            <img src="{{ url_for('static', filename='images/' + item.anh) }}" alt="{{ item.ten }}" >
+                            <div class="product-details"
+                                 style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                <div>
+                                    <h4 style="margin: 0;">{{ item.ten }}</h4>
+                                    <p style="margin: 4px 0 0;">Số lượng: {{ item.qty }}</p>
+                                </div>
+                                <button class="btn-evaluation" style="font-size: 13px;"
+                                        onclick="openEvalModal('{{ item.id }}', '{{ item.ten }}')">
+                                    Đánh giá
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="order-card-footer">
+                        <div class="action-btns">
+                            <button class="btn-invoice" onclick="openFeedbackModal('{{ order.id }}')">Góp ý</button>
+                            {% if order.status in ['cart', 'Chua xong'] %}
+                            <button onclick="confirmCancel({{ order.id }})">Hủy đơn</button>
+                            {% elif order.status == 'Chưa xong' %}
+                            <span style="color: green;">Đã thanh toán</span>
+                            {% elif order.status == 'cancelled' %}
+                            <span style="color: red;">Đã hủy</span>
+                            {% else %}
+                            <span>{{ order.status }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<div id="evaluationModal" class="modal-overlay">
+    <div class="modal-content">
+        <span class="close-x" onclick="closeModal()">&times;</span>
+
+        <h3>Đánh giá món: <span id="evalProductName" style="color: #facc15;">Món</span></h3>
+        <hr style="opacity: 0.2; margin: 15px 0;">
+
+        <form action="/submit-evaluation" method="POST">
+            <input type="hidden" id="evalProductId" name="product_id">
+
+            <div class="rating-section">
+                <p style="font-weight: 600; margin-bottom: 10px;">Bạn cho mấy điểm</p>
+                <div class="stars">
+                    <input type="radio" name="rating" value="5" id="s5"><label for="s5">★</label>
+                    <input type="radio" name="rating" value="4" id="s4"><label for="s4">★</label>
+                    <input type="radio" name="rating" value="3" id="s3"><label for="s3">★</label>
+                    <input type="radio" name="rating" value="2" id="s2"><label for="s2">★</label>
+                    <input type="radio" name="rating" value="1" id="s1"><label for="s1">★</label>
+                </div>
+            </div>
+
+            <div class="feedback-section" style="margin-top: 20px;">
+                <p style="font-weight: 600; margin-bottom: 5px;">Góp ý về món:</p>
+                <textarea name="feedback" rows="4" placeholder="Hãy nói cho tui biết về mùi vị của món..." required></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-close-modal" onclick="closeModal()">Đóng</button>
+                <button type="submit" class="btn-submit-modal">Gửi đánh giá</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    function confirmCancel(id) {
+        if (confirm("Bạn chắc chắn muốn hủy đơn?")) {
+            window.location.href = "/cancel_order/" + id;
+        }
+    }
+        function openEvalModal(productId, productName) {
+        const modal = document.getElementById('evaluationModal');
+        // Gán thông tin vào Modal
+        document.getElementById('evalProductId').value = productId;
+        document.getElementById('evalProductName').innerText = productName;
+
+        // Hiện Modal
+        modal.style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('evaluationModal').style.display = 'none';
+    }
+
+    // Đóng khi click ra ngoài vùng mờ
+    window.onclick = function(event) {
+        const modal = document.getElementById('evaluationModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+</script>
+<div id="feedbackModal" class="modal-overlay">
+    <div class="modal-content">
+        <span class="close-x" onclick="closeFeedbackModal()">&times;</span>
+
+        <h3 style="margin-bottom: 5px;">Đánh giá phục vụ: <span id="displayOrderId" style="color: #3b82f6;">#000</span>
+        </h3>
+        <p style="font-size: 13px; color: #6b7280; margin-bottom: 20px;">Góp ý của bạn giúp YUMMY phục vụ tốt hơn!</p>
+
+        <form action="/submit-feedback" method="POST">
+            <input type="hidden" id="feedbackOrderId" name="order_id">
+
+            <div style="text-align: left;">
+                <label style="font-weight: 600; display: block; margin-bottom: 8px;">Nội dung góp ý:</label>
+                <textarea name="content" rows="5"
+                          style="width: 100%; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; font-family: inherit; resize: none; outline: none; transition: border 0.2s;"
+                          placeholder="Nhập cảm nhận của bạn về đơn hàng..." required></textarea>
+            </div>
+
+            <div class="modal-actions" style="display: flex; gap: 10px; margin-top: 25px;">
+                <button type="button" class="btn-close-modal" onclick="closeFeedbackModal()"
+                        style="flex: 1; padding: 12px; border: none; border-radius: 10px; background: #f1f5f9; font-weight: 600; cursor: pointer;">
+                    Đóng
+                </button>
+                <button type="submit" class="btn-submit-modal"
+                        style="flex: 2; padding: 12px; border: none; border-radius: 10px; background: #3b82f6; color: white; font-weight: 700; cursor: pointer;">
+                    Gửi góp ý
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    function openFeedbackModal(orderId) {
+    const modal = document.getElementById('feedbackModal');
+    // Gán ID đơn hàng vào các vị trí cần thiết
+    document.getElementById('feedbackOrderId').value = orderId;
+    document.getElementById('displayOrderId').innerText = "#" + orderId;
+
+    // Hiện Modal với hiệu ứng mờ
+    modal.style.display = 'block';
+}
+
+function closeFeedbackModal() {
+    document.getElementById('feedbackModal').style.display = 'none';
+}
+
+// Đóng Modal khi người dùng nhấn phím Esc hoặc click ra ngoài vùng mờ
+window.addEventListener('click', function(event) {
+    const feedModal = document.getElementById('feedbackModal');
+    const evalModal = document.getElementById('evaluationModal'); // Dùng cho cả bảng 5 sao nếu có
+
+    if (event.target == feedModal) feedModal.style.display = 'none';
+    if (event.target == evalModal) evalModal.style.display = 'none';
+});
+</script>
+{% endblock %}

@@ -23,7 +23,6 @@ def deli():
         data = []
     return render_template('deli_list.html', orders=data)
 
-# 3. Trang chi tiết đơn giao hàng
 @manager_bp.route('/dondeli/chitiet')
 def deli_chitiet():
     try:
@@ -33,7 +32,6 @@ def deli_chitiet():
         data = []
     return render_template('deli_detail.html', details=data)
 
-# 4. Trang danh sách đơn ăn tại chỗ (Eatin)
 @manager_bp.route('/doneatin')
 def eatin():
     try:
@@ -43,7 +41,6 @@ def eatin():
         data = []
     return render_template('eatin_list.html', orders=data)
 
-# 5. Trang chi tiết đơn ăn tại chỗ
 @manager_bp.route('/doneatin/chitiet')
 def eatin_chitiet():
     try:
@@ -53,7 +50,6 @@ def eatin_chitiet():
         data = []
     return render_template('eatin_detail.html', details=data)
 
-# 6. Xử lý nút bấm Hoàn thành đơn Deli
 @manager_bp.route('/update_status_deli/<int:id_don>', methods=['POST'])
 def update_status_deli(id_don):
     try:
@@ -62,7 +58,6 @@ def update_status_deli(id_don):
         pass
     return redirect(url_for('manager.deli'))
 
-# 7. Xử lý nút bấm Hoàn thành đơn Eatin
 @manager_bp.route('/update_status_eatin/<int:id_don>', methods=['POST'])
 def update_status_eatin(id_don):
     try:

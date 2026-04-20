@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Thay link ảnh món ăn đẹp mắt tại đây */
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                        url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h2 { color: #e67e22; margin-bottom: 10px; font-size: 28px; }
+        p { color: #666; margin-bottom: 30px; }
+
+        .input-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            transition: 0.3s;
+        }
+        input:focus { border-color: #e67e22; box-shadow: 0 0 5px rgba(230,126,34,0.5); }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: #e67e22;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-login:hover { background: #d35400; }
+
+        .social-login {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .btn-social {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-text { margin-top: 20px; font-size: 14px; color: #666; }
+        .footer-text a { color: #e67e22; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>YUMMY</h2>
+    <p>Ăn gì hôm nay?</p>
+
+    <form method="POST" action="/login">
+        <div class="input-group">
+            <label>Tên Đăng Nhập</label>
+            <input type="text" name="username" placeholder="Nhập email của bạn..." required>
+        </div>
+        <div class="input-group">
+            <label>Mật khẩu</label>
+            <input type="password" name="password" placeholder="********" required>
+        </div>
+
+        <button type="submit" class="btn-login">ĐĂNG NHẬP</button>
+    </form>
+
+    <div class="social-login">
+        <button class="btn-social">Google</button>
+        <button class="btn-social">Facebook</button>
+    </div>
+
+    <p class="footer-text">Chưa có tài khoản? <a href="#">Đăng ký ngay</a></p>
+</div>
+
+</body>
+</html>

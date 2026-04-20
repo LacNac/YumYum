@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="hero">
+            <div class="hero-text">
+                <h1>Yummy</h1>
+                <p>YUMMY ra đời từ niềm đam mê bất tận với ẩm thực Việt. Chúng mình tin rằng, một bữa ăn ngon không chỉ để làm no bụng, mà còn là cách để nạp lại năng lượng và kết nối mọi người sau những giờ làm việc, học tập căng thẳng.</p>
+                <p>Từ bát Phở bò bốc khói nghi ngút đến ly Trà đá mát lạnh, mỗi món ăn tại YUMMY đều được thực hiện với sự tận tâm cao nhất, mang hương vị "nhà làm" nhưng với chất lượng chuyên nghiệp.</p>
+            </div>
+            <div class="hero-image">
+                <img src="https://i.pinimg.com/736x/22/fb/a6/22fba6691b270300868acc91c71e4312.jpg" alt="Moon">
+            </div>
+        </header>
+
+        <div class="who-we-are">
+            <div class="wwa-image">
+                <img src="https://i.pinimg.com/1200x/73/0b/df/730bdf8cf62b62835d833c0f03ee3240.jpg" alt="People looking at stars">
+            </div>
+            <div class="wwa-content">
+                <h4>Câu chuyện của chúng mình</h4>
+                <h2>Hương vị cơm nhà, đậm đà tình thân</h2>
+                <p>YUMMY không chỉ là một quán ăn, mà là nơi chúng mình tái hiện lại những mâm cơm gia đình ấm áp. Mỗi món ăn đều được chế biến từ nguyên liệu tươi sạch, đong đầy tâm huyết như chính bàn tay mẹ nấu, giúp bạn tìm thấy sự bình yên giữa lòng thành phố nhộn nhịp.</p>
+
+                <div class="features-grid">
+                    <div>✓ Nguyên liệu sạch mỗi ngày</div>
+                    <div>✓ Công thức truyền thống</div>
+                    <div>✓ Không chất bảo quản.</div>
+                    <div>✓ Phục vụ bằng cả trái tim</div>
+                </div>
+
+                <a href="{{url_for('menu')}}" class="btn-outline">Xem thực đơn ngay</a>
+            </div>
+        </div>
+
+        <section class="stats-section">
+            <div class="stats-text">
+                <h3>Về chúng tôi</h3>
+                <h2>Ẩm thực YUMMY - Gói trọn tâm tình trong từng món ăn</h2>
+                <p>"Chúng tôi hiểu rằng một bữa ăn ngon không chỉ nằm ở gia vị, mà còn ở sự an tâm về sức khỏe. Tại YUMMY, mỗi khâu từ chọn lọc nông sản sạch đến quy trình chế biến chuẩn vệ sinh đều được kiểm soát nghiêm ngặt, mang đến cho bạn trải nghiệm ẩm thực trọn vẹn như cơm mẹ nấu."</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>2,950+</h3>
+                    <p>Bữa ăn đã phục vụ</p>
+                </div>
+                <div class="stat-item">
+                    <h3>12</h3>
+                    <p>Năm kinh nghiệm</p>
+                </div>
+                <div class="stat-item">
+                    <h3>5</h3>
+                    <p>Chi nhánh tại Hà Nội</p>
+                </div>
+                <div class="stat-item">
+                    <h3>24</h3>
+                    <p>Món ngon đặc sắc</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="cta">
+            <h2>Khám phá hương vị đặc sắc</h2>
+            <p>Mỗi món ăn tại YUMMY là một câu chuyện về văn hóa ẩm thực, được chuẩn bị bằng cả trái tim để mang đến cho bạn những phút giây thưởng thức trọn vẹn nhất.</p>
+            <a href="{{url_for('menu')}}" class="btn-solid">Đặt bàn ngay</a>
+        </div>
+    </div>
+
+{% endblock %}
