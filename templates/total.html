@@ -45,8 +45,6 @@
     <span>{{ total | length }} đơn hàng</span>
 </div>
 
-{# ===== STATS ===== #}
-
 <div class="stats-grid">
 
 <div class="stat-card">
@@ -80,15 +78,12 @@
 
 </div>
 
-{# ===== FILTER ===== #}
-
 <div class="filter-bar">
     <button class="filter-btn active" onclick="filterTable('all', this)">Tất cả</button>
     <button class="filter-btn" onclick="filterTable('deli', this)">Giao hàng</button>
     <button class="filter-btn" onclick="filterTable('eat_in', this)">Tại chỗ</button>
 </div>
 
-{# ===== TABLE ===== #}
 
 <div class="table-wrap">
 {% if total %}

@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 import sqlite3
 
-DATABASE = 'quan-an.db'
+DATABASE = '../quan-an.db'
 app = Flask(__name__)
 
 @app.route('/dsdeli')
