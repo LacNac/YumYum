@@ -1,0 +1,162 @@
+{% extends 'basemanager.html' %}
+{% block title %}Doanh Thu Tổng Quát{% endblock %}
+
+{% block extra_style %}
+
+<style>
+.filter-bar {
+    display:flex;
+    gap:0.6rem;
+    margin-bottom:1.5rem;
+    flex-wrap:wrap;
+}
+.filter-btn {
+    padding:0.35rem 0.9rem;
+    border-radius:20px;
+    border:1px solid var(--border);
+    background:transparent;
+    color:var(--text2);
+    font-size:0.8rem;
+    cursor:pointer;
+    transition:all 0.2s;
+}
+.filter-btn.active,
+.filter-btn:hover {
+    background:var(--accent);
+    color:#111;
+    border-color:var(--accent);
+    font-weight:600;
+}
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+{# ===== DATA ===== #}
+{% set done_list    = total | selectattr('Trang_thai', 'equalto', 'Đã xong') | list %}
+{% set pending_list = total | selectattr('Trang_thai', 'equalto', 'Chưa xong') | list %}
+
+{% set total_rev = total | sum(attribute='tong_doanh_thu') %}
+{% set done_rev  = done_list | sum(attribute='tong_doanh_thu') %}
+
+<div class="page-header">
+    <h1>Doanh Thu</h1>
+    <span>{{ total | length }} đơn hàng</span>
+</div>
+
+{# ===== STATS ===== #}
+
+<div class="stats-grid">
+
+<div class="stat-card">
+    <div class="stat-label">Tổng Doanh Thu</div>
+    <div class="stat-value">{{ "{:,.0f}".format(total_rev) }}đ</div>
+    <div class="stat-sub">Tất cả đơn</div>
+</div>
+
+<div class="stat-card">
+    <div class="stat-label">Đã Thu</div>
+    <div class="stat-value" style="color:var(--success)">
+        {{ "{:,.0f}".format(done_rev) }}đ
+    </div>
+    <div class="stat-sub">{{ done_list | length }} đơn hoàn thành</div>
+</div>
+
+<div class="stat-card">
+    <div class="stat-label">Chờ Xử Lý</div>
+    <div class="stat-value" style="color:var(--pending)">
+        {{ "{:,.0f}".format(total_rev - done_rev) }}đ
+    </div>
+    <div class="stat-sub">{{ pending_list | length }} đơn chưa xong</div>
+</div>
+
+<div class="stat-card">
+    <div class="stat-label">Tổng Đơn</div>
+    <div class="stat-value">{{ total | length }}</div>
+    <div class="stat-sub">Giao hàng + Tại chỗ</div>
+</div>
+
+
+</div>
+
+{# ===== FILTER ===== #}
+
+<div class="filter-bar">
+    <button class="filter-btn active" onclick="filterTable('all', this)">Tất cả</button>
+    <button class="filter-btn" onclick="filterTable('deli', this)">Giao hàng</button>
+    <button class="filter-btn" onclick="filterTable('eat_in', this)">Tại chỗ</button>
+</div>
+
+{# ===== TABLE ===== #}
+
+<div class="table-wrap">
+{% if total %}
+<table id="main-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Mã đơn</th>
+            <th>Loại</th>
+            <th>Thời gian</th>
+            <th>Doanh thu</th>
+            <th>Trạng thái</th>
+        </tr>
+    </thead>
+
+<tbody>
+{% for row in total %}
+<tr data-type="{{ row['Loai_don'] }}">
+    <td style="color:var(--text2)">{{ loop.index }}</td>
+
+    <td><strong>#{{ row['id_don'] }}</strong></td>
+
+    <td>
+        {% if row['Loai_don'] == 'deli' %}
+            <span class="type-deli">Giao hàng</span>
+        {% else %}
+            <span class="type-eatin">Tại chỗ</span>
+        {% endif %}
+    </td>
+
+    <td style="color:var(--text2); font-size:0.82rem;">
+        {{ row['Thoi_gian'] or '—' }}
+    </td>
+
+    <td class="money">
+        {{ "{:,.0f}".format(row['tong_doanh_thu']) }}đ
+    </td>
+
+    <td>
+        {% if row['Trang_thai'] == 'Đã xong' %}
+            <span class="badge badge-done">Hoàn thành</span>
+        {% else %}
+            <span class="badge badge-pending">Chưa xong</span>
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% else %}
+<div class="empty">Chưa có dữ liệu doanh thu.</div>
+{% endif %}
+</div>
+
+{% endblock %}
+
+{% block extra_script %}
+
+<script>
+function filterTable(type, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    document.querySelectorAll('#main-table tbody tr').forEach(row => {
+        const rowType = row.dataset.type;
+        row.style.display = (type === 'all' || rowType === type) ? '' : 'none';
+    });
+}
+</script>
+
+{% endblock %}

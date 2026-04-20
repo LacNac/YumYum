@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, redirect, jsonify, session, flash, url_for
 import sqlite3
 import re
+from manager import manager_bp
 
 app = Flask(__name__)
 app.secret_key = "abc123"  # bắt buộc để dùng session
+app.register_blueprint(manager_bp)
 
 @app.route('/Manager')
 
@@ -21,15 +23,16 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
-@app.route('/login', methods=['GET', 'POST'])  # Thêm GET để hiển thị trang login
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
 
         username = request.form.get('username')
         password = request.form.get('password')
 
+
         if not username or not password:
-            return "Vui lòng nhập đầy đủ tài khoản và mật khẩu"
+            return render_template('login.html', error="Vui lòng nhập đầy đủ thông tin")
 
         conn = get_db()
         user = conn.execute("""
@@ -38,14 +41,19 @@ def login():
         """, (username, password)).fetchone()
         conn.close()
 
+        if username == "manager" and password == "1":
+            return redirect('/manager/doanhthu')
         if user:
             session['user_id'] = user['id_kh']
             session['ten_kh'] = user['Ten_kh']
             return redirect('/home')
         else:
-            return "Sai tài khoản hoặc mật khẩu"
+            return render_template('login.html', error="Sai tài khoản hoặc mật khẩu")
+        
 
-    return render_template('login.html')  # Trả về trang login nếu là GET
+        
+
+    return render_template('login.html')
 
 @app.route('/logout')
 def logout():
