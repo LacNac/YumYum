@@ -21,7 +21,7 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
-@app.route('/login', methods=['GET', 'POST'])  # Thêm GET để hiển thị trang login
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
 
@@ -29,7 +29,7 @@ def login():
         password = request.form.get('password')
 
         if not username or not password:
-            return "Vui lòng nhập đầy đủ tài khoản và mật khẩu"
+            return render_template('login.html', error="Vui lòng nhập đầy đủ thông tin")
 
         conn = get_db()
         user = conn.execute("""
@@ -43,9 +43,9 @@ def login():
             session['ten_kh'] = user['Ten_kh']
             return redirect('/home')
         else:
-            return "Sai tài khoản hoặc mật khẩu"
+            return render_template('login.html', error="Sai tài khoản hoặc mật khẩu")
 
-    return render_template('login.html')  # Trả về trang login nếu là GET
+    return render_template('login.html')
 
 @app.route('/logout')
 def logout():

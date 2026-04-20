@@ -97,6 +97,9 @@
             <input type="password" name="password" placeholder="********" required>
         </div>
 
+        {% if error %}
+    <p style="color: red; text-align: center;">{{ error }}</p>
+    {% endif %}
         <button type="submit" class="btn-login">ĐĂNG NHẬP</button>
     </form>
 
