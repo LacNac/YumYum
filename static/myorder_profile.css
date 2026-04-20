@@ -54,29 +54,23 @@
 .order-product:last-child { border-bottom: none; }
 
 .order-product img {
-    width: 60px;
+    min-width:60px;
+    max-width:60px;
     height: 60px;
-    border-radius: 8px;
     object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #f1f5f9;
+    flex-shrink: 0;
 }
 .product-details {
     display: flex;
     justify-content: space-between; /* Đẩy tên món sang trái, nút sang phải */
     align-items: center;
-    width: 100%; /* Đảm bảo nó chiếm hết chiều ngang */
+    width: 100%;
 }
 .product-details h4 { font-size: 16px; margin-bottom: 4px; color: #1a1a1a; }
 .product-details p { font-size: 13px; color: #777; }
 
-
-.order-card-footer {
-    padding: 20px 25px;
-    background: #fff;
-    border-top: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
 
 .status-badge {
     padding: 6px 15px;
@@ -85,25 +79,72 @@
     font-weight: 600;
 }
 
-.status-badge.accepted { background: #fef9c3; color: #854d0e; }
-.status-badge.delivered { background: #dcfce7; color: #166534; }
-
-.action-btns { display: flex; gap: 10px; }
-
-.btn-invoice, .btn-cancel, .btn-review {
-    padding: 10px 20px;
+.btn-evaluation, .btn-invoice, .action-btns button {
+    padding: 8px 16px;
+    border: 1px solid #e2e8f0;
     border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    border: 1px solid #ddd;
     background: #fff;
-    transition: 0.3s;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s;
 }
 
+/* Nút Đánh giá (Evaluation) */
+.btn-evaluation {
+    border-color: #facc15;
+    color: #1a1a1a;
+}
+.btn-evaluation:hover {
+    background: #facc15;
+}
 
-.btn-cancel { border: none; color: #ef4444; }
-.btn-cancel:hover { background: #fef2f2; }
+/* Nút Feedback và Hủy đơn */
+.btn-invoice:hover { background: #f1f5f9; }
+
+.action-btns button[onclick*="confirmCancel"] {
+    color: #ef4444;
+    border-color: #fecaca;
+}
+.action-btns button[onclick*="confirmCancel"]:hover {
+    background: #fef2f2;
+    border-color: #ef4444;
+}
+
+/* Biến chữ "Đã thanh toán" thành một cái Badge xịn */
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.status-success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-error {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Căn chỉnh lại khu vực footer của card */
+.order-card-footer {
+    border-top: 1px solid #f1f5f9;
+    padding: 15px;
+    margin: 10px;
+    display: flex;
+    justify-content: flex-end; /* Đẩy hết nút về bên phải cho gọn */
+}
+
+.action-btns {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
 
 
 @media (max-width: 600px) {
@@ -111,63 +152,102 @@
     .order-card-footer { flex-direction: column; gap: 15px; align-items: flex-start; }
 }
 
-// feedback
-/* Lớp nền mờ phủ kín màn hình */
+/* Sử dụng lại class modal-overlay để làm mờ xung quanh */
 .modal-overlay {
-    /* Ép buộc nó phải ẩn đi khi mới load trang */
-    display: none !important;
-
+    display: none;
     position: fixed;
-    top: 0;
+    z-index: 3000;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(8px);
-    z-index: 10000;
-    justify-content: center;
-    align-items: center;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px); /* HIỆU ỨNG LÀM MỜ GIỐNG TRANG CART */
 }
 
-/* Khung nội dung trắng */
 .modal-content {
-    background: white;
-    padding: 35px;
-    border-radius: 20px;
-    width: 450px;
-    position: relative;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    text-align: center;
-}
-
-/* Nút X đóng nhanh */
-.close-x {
     position: absolute;
-    top: 15px; right: 20px;
-    font-size: 28px;
-    cursor: pointer;
-    color: #999;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 20px; /* Bo góc tròn trịa */
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    text-align: center;
+    animation: modalSlideUp 0.3s ease-out;
 }
 
-/* Hệ thống sao */
+/* Phần chọn sao (Rating) chuyên nghiệp */
 .stars {
     display: flex;
     flex-direction: row-reverse;
     justify-content: center;
     gap: 5px;
 }
+
 .stars input { display: none; }
-.stars label { font-size: 45px; color: #ddd; cursor: pointer; transition: 0.2s; }
-.stars input:checked ~ label, .stars label:hover, .stars label:hover ~ label {
-    color: #facc15;
+
+.stars label {
+    font-size: 35px;
+    color: #dfe6e9;
+    cursor: pointer;
+    transition: color 0.2s;
 }
 
-/* Nút bấm trong Modal */
-.modal-actions { display: flex; justify-content: center; gap: 15px; margin-top: 25px; }
-.btn-close-modal { background: #eee; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; }
-.btn-submit-modal { background: #facc15; border: none; padding: 10px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+.stars input:checked ~ label,
+.stars label:hover,
+.stars label:hover ~ label {
+    color: #facc15; /* Màu vàng thương hiệu Yummy */
+}
 
-/* Textarea */
-.feedback-section textarea {
-    width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 10px; font-family: inherit;
+/* Ô nhập liệu */
+textarea {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px;
+    font-family: inherit;
+    resize: none;
+    outline: none;
+}
+textarea:focus { border-color: #facc15; }
+
+/* Nút bấm trong Modal */
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.btn-close-modal {
+    flex: 1;
+    background: #f1f5f9;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-submit-modal {
+    flex: 2;
+    background: #facc15;
+    color: #1f2937;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.close-x {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 25px;
+    cursor: pointer;
+    color: #94a3b8;
 }

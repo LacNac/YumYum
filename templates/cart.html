@@ -1,12 +1,14 @@
 {% extends "base.html" %}
+
 {% block content %}
+
 <div class="cart-wrapper">
         <div class="cart-items-section">
             <div class="cart-header">
-                <div>Product</div>
-                <div class="quantity">Quantity</div>
-                <div class="total">Total</div>
-                <div class="delete">Delete</div>
+                <div>Món ăn</div>
+                <div class="quantity">Số lượng</div>
+                <div class="total">Thành tiền</div>
+                <div class="delete">Hủy</div>
             </div>
 
             {% for item in items %}
@@ -40,89 +42,107 @@
         </div>
 
     <div class="order-summary">
-        <h3>Order Summary</h3>
+        <h3>Chi tiết đơn hàng</h3>
         <div class="service-selection" style="margin-bottom: 20px;">
-    <p style="font-weight: bold; margin-bottom: 10px;">Service Method:</p>
+    <p style="font-weight: bold; margin-bottom: 10px;">Hình thức:</p>
     <div style="display: flex; gap: 20px;">
         <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
             <input type="radio" name="loai_don" value="eat_in" {{ 'checked' if loai == 'eat_in' else '' }} onchange="updateService(this.value)" onclick="toggleDineInFields(true)">
-            <span>🍽️ At Restaurant</span>
+            <span>Dùng tại chỗ</span>
         </label>
         <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
             <input type="radio" name="loai_don" value="deli" {{ 'checked' if loai == 'deli' else '' }} onchange="updateService(this.value)" onclick="toggleDineInFields(false)">
-            <span>🥡 Take Away</span>
+            <span>Mang về</span>
         </label>
     </div>
-            <script>
-function updateService(value) {
-    fetch('/update_service', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ loai_don: value })
-    })
-}
-</script>
+
           <div id="dine-in-details" style="display: none; background: #f9f9f9; padding: 10px; border-radius: 8px;">
         <div style="margin-bottom: 12px;">
-            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Arrival Date & Time:</label>
+            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Giờ nhận bàn:</label>
             <input type="datetime-local" name="arrival_datetime" value="{{ thoigian }}"  onchange="updateTime(this.value)"
                    style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-family: sans-serif;">
         </div>
     </div>
-            <script>
-function toggleDineInFields(show) {
-    const details = document.getElementById('dine-in-details');
-    details.style.display = show ? 'block' : 'none';
-
-    const dateTimeInput = document.querySelector('input[name="arrival_datetime"]');
-    dateTimeInput.required = show;
-}
-                function updateTime(value) {
-    fetch('/update_time', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ thoigian: value })
-    })
-}
-</script>
 </div>
 
         <div class="summary-line">
-            <span>Sub Total</span>
+            <span>Tổng tiền</span>
             <span>{{ total }} VND</span>
         </div>
         <div class="summary-line">
-            <span>Taxes</span>
+            <span>Thuế</span>
             <span style="font-weight: 600;">0 VND</span>
         </div>
         <div class="summary-line">
-            <span>Coupon Discount</span>
+            <span>Ưu đãi</span>
             <span style="font-weight: 600;">0 VND</span>
         </div>
 
         <div class="summary-line total">
-            <span>Total</span>
+            <span>Tổng</span>
             <span>{{ total }} VND</span>
         </div>
 
-        <button class="btn-checkout">Pay bill</button>
+        <button class="btn-checkout" id="pay-bill-btn">Thanh toán</button>
     </div>
 
 </div>
 
-<div id="paymentModal" class="modal">
-    <div class="modal-content">
+<div id="payment-modal" class="payment_content">
+    <div class="payment_content-content">
         <span class="close-btn">&times;</span>
-        <h2>Xác nhận thanh toán</h2>
-        <p>Tổng tiền của bạn là: <strong>{{ total }} VND</strong></p>
-        <img src="{{ url_for('static', filename='images/QR.jpg') }}" class="qr_pay">
-        <button class="confirm-btn">Hoàn tất đặt hàng</button>
+
+        <div id="qr-section">
+            <h2 style="margin-top: 10px; font-size: 20px;">Quét mã QR để thanh toán</h2>
+            <p style="font-weight: bold; color: var(--danger-color); font-size: 18px;">Tổng: {{ total }} VND</p>
+            <div class="qr-container">
+                {% if qr_url %}
+                    <img src="{{ qr_url }}" class="qr_pay" alt="QR Code">
+                {% else %}
+                    <p>Chưa có mã QR</p>
+                {% endif %}
+            </div>
+            <div id="loading-status" style="color: var(--success-color); font-weight: 600; margin-top: 15px;">
+                ⏳ Đang chờ hệ thống xác nhận...
+            </div>
+        </div>
+
+        <div id="success-section" style="display: none; padding: 20px;">
+            <div class="success-animation">
+                <div class="check-icon" style="font-size: 80px; color: var(--success-color);">✔️</div>
+            </div>
+            <h2 style="color: var(--success-color); margin-bottom: 10px;">Thanh toán thành công!</h2>
+            <p>Đơn hàng của bạn đang được <strong>Yummy</strong> chuẩn bị.</p>
+            <p style="font-size: 13px; color: #888; margin-top: 15px;">Tự động chuyển trang sau 3 giây...</p>
+        </div>
     </div>
 </div>
-<script src="{{url_for('static', filename='paybill.js')}}"></script>
+<script>
+    // Khai báo biến quan trọng cho JS
+    const ORDER_ID = "{{ order_id }}";
+
+    // Các hàm xử lý cập nhật (đưa vào đây để tránh lỗi file JS riêng không nhận)
+    function updateService(value) {
+        fetch('/update_service', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ loai_don: value })
+        });
+    }
+
+    function toggleDineInFields(show) {
+        const details = document.getElementById('dine-in-details');
+        if (details) details.style.display = show ? 'block' : 'none';
+    }
+
+    function updateTime(value) {
+        fetch('/update_time', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ thoigian: value })
+        });
+    }
+</script>
+<script src="{{ url_for('static', filename='paybill.js') }}"></script>
 
 {% endblock %}

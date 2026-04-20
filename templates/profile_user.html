@@ -1,23 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="account-container">
-    <h1 class="page-title">My Account</h1>
+    <h1 class="page-title">Tài khoản của tôi</h1>
 
 
     <div class="account-wrapper">
         <aside class="sidebar">
-            <ul class="categories">
+            <ul class="categories_about">
                 <li>
-                    <a href="{{url_for('profile')}}">Personal Information</a>
+                    <a href="{{ url_for('profile') }}"
+                       class="nav-account {% if request.endpoint == 'profile' %}active{% endif %}">
+                        Thông tin cá nhân
+                    </a>
                 </li>
                 <li>
-                    <a href="{{url_for('myorders')}}">My Orders</a>
-                </li>
+                    <a href="{{ url_for('myorders') }}"
+                       class="nav-account {% if request.endpoint == 'myorders' %}active{% endif %}">
+                        Đơn hàng của tôi
+                    </a></li>
                 <li>
-                    <a href="{{url_for('password_manager')}}">Password Manager</a>
-                </li>
+                    <a href="{{ url_for('password_manager') }}"
+                       class="nav-account {% if request.endpoint == 'password_manager' %}active{% endif %}">
+                        Đổi mật khẩu
+                    </a></li>
                 <li>
-                    <a href="{{url_for('home')}}">Log Out</a>
+                    <a href="{{url_for('logout')}}" class="nav-account">Log Out</a>
                 </li>
             </ul>
         </aside>
@@ -30,7 +37,7 @@
             </div>
 
             <form class="profile-form" method="POST">
-                <h3 class="form-section-title">Personal Information</h3>
+                <h3 class="form-section-title">Thông tin cá nhân</h3>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Họ Tên *</label>
@@ -44,44 +51,47 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Phone *</label>
+                    <label>Số điện thoại *</label>
                     <input type="text" value="{{ user['Sdt'] }}">
                 </div>
 
                 <div class="form-group">
-                    <label>Gender *</label>
-<select name="gioitinh">
-    <option value="Nam" {{ "selected" if user["Gioi_tinh"] == "Nam" else "" }}>Male</option>
-    <option value="Nữ" {{ "selected" if user["Gioi_tinh"] == "Nữ" else "" }}>Female</option>
-    <option value="LGBT" {{ "selected" if user["Gioi_tinh"] == "LGBT" else "" }}>LGBT</option>
-</select>
+                    <label>Giới tính *</label>
+                    <select name="gioitinh">
+                        <option value="Nam" {{
+                        "selected" if user["Gioi_tinh"] == "Nam" else "" }}>Nam</option>
+                        <option value="Nữ" {{
+                        "selected" if user["Gioi_tinh"] == "Nữ" else "" }}>Nữ</option>
+                        <option value="LGBT" {{
+                        "selected" if user["Gioi_tinh"] == "LGBT" else "" }}>LGBT</option>
+                    </select>
                 </div>
 
                 <hr class="form-divider">
 
-                <h3 class="form-section-title">Delivery Address</h3>
+                <h3 class="form-section-title">Địa chỉ:</h3>
                 <div class="form-group">
-                    <label>Street Address *</label>
+                    <label>Địa chỉ chi tiết *</label>
                     <input type="text" placeholder="Số nhà, tên đường...">
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>City / Province *</label>
+                        <label>Thành phố/ Tỉnh *</label>
                         <input type="text" value="{{ user['Dia_chi'] }}">
                     </div>
                     <div class="form-group">
-                        <label>District *</label>
+                        <label>Quận/ Huyện *</label>
                         <input type="text" placeholder="Quận / Huyện">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Note for Courier</label>
+                    <label>Ghi chú</label>
                     <textarea placeholder="Ghi chú cho shipper (ví dụ: Gọi trước khi giao, cổng sau...)"></textarea>
                 </div>
 
-                <button type="submit" class="btn-update">Update Changes</button>
+                <button type="submit" class="btn-update">Cập nhật thay đổi</button>
             </form>
         </main>
     </div>

@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request, redirect, jsonify, session
-from livereload import Server
+from flask import Flask, render_template, request, redirect, jsonify, session, flash, url_for
 import sqlite3
+import re
 
 app = Flask(__name__)
 app.secret_key = "abc123"  # bắt buộc để dùng session
@@ -50,7 +50,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.clear() # Xóa toàn bộ dữ liệu trong session
-    return redirect('/login') # Quay về trang đăng nhập
+    return redirect('/home') # Quay về trang đăng nhập
 
 def update_menu(page=1, per_page=10, danh_muc=None, keyword=None):
 
@@ -240,9 +240,9 @@ def cart():
     loai = order_info["Loai_don"] if order_info else "eat_in"
     thoigian = (order_info["Thoi_gian"].replace(" ", "T")[:16]) if order_info and order_info["Thoi_gian"] else ""
 
-    # 2. Lấy danh sách món ăn trong giỏ (Dùng JOIN)
+    # 2. Lấy danh sách món ăn trong giỏ
     items = conn.execute("""
-        SELECT m.Ten_mon, m.Gia, c.So_luong, m.Anh, m.id_mon
+        SELECT m.Ten_mon, m.Gia, c.So_luong, m.Anh, m.id_mon, m.Danh_muc
         FROM Chi_tiet_don c
         JOIN Mon_an m ON c.id_mon = m.id_mon
         WHERE c.id_don = ?
@@ -259,8 +259,17 @@ def cart():
             "subtotal": subtotal
         })
 
+    bank_id = "MSB"
+    account_number = "96886693010391"
+
+    import urllib.parse
+    description = urllib.parse.quote(f"YUMMYOrder{id_don}")
+
+    qr_url = f"https://img.vietqr.io/image/{bank_id}-{account_number}-compact.jpg?amount={total}&addInfo={description}"
+
     conn.close()
-    return render_template('cart.html', items=cart_items, total=total, loai=loai, thoigian=thoigian)
+
+    return render_template('cart.html', items=cart_items, total=total, loai=loai, thoigian=thoigian, qr_url=qr_url, amount=total, order_id = id_don)
 
 
 @app.route("/update_time", methods=["POST"])
@@ -441,10 +450,127 @@ def submit_evaluation():
 
     return redirect('/myorders')
 
-@app.route('/payment')
-def payment():
-    return render_template('payment_method.html')
 
+@app.route('/webhook/sepay', methods=['POST'])
+def sepay_webhook():
+    print("WEBHOOK HIT")
+
+    data = request.get_json(silent=True)
+    print("DATA:", data)
+
+    if not data:
+        return "NO DATA", 200
+
+    description = (
+        data.get('description')
+        or data.get('data', {}).get('description')
+        or data.get('content')
+        or ""
+    )
+
+    print("DESCRIPTION:", description)
+
+    match = re.search(r'YUMMYOrder(\d+)', description)
+
+    if match:
+        order_id = int(match.group(1))
+
+        db = get_db()
+        db.execute(
+            "UPDATE Don_hang SET Trang_thai = 'Chưa xong' WHERE id_don = ?",
+            (order_id,)
+        )
+        db.commit()
+        db.close()
+
+        print("UPDATED:", order_id)
+    else:
+        print("KHÔNG TÌM THẤY ORDER ID")
+
+    return "OK"
+
+SEPAY_SECRET = "86RU0UDOJS4A8UZDYGYPJVETB2LLBRTYM0II3U5WKQXOJ1FCPYCGCRXNSFXOXK3V"
+
+@app.route('/check_payment/<int:order_id>')
+def check_payment(order_id):
+    db = get_db()
+    order = db.execute(
+        "SELECT Trang_thai FROM Don_hang WHERE id_don = ?",
+        (order_id,)
+    ).fetchone()
+
+    return jsonify({
+        "status": order['Trang_thai']
+    })
+
+@app.route('/cancel_order/<int:order_id>')
+def cancel_order(order_id):
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    db = get_db()
+
+    try:
+        db.execute("""
+            UPDATE Don_hang
+            SET Trang_thai = 'cancelled'
+            WHERE id_don = ? 
+            AND Trang_thai IN ('cart', 'Chưa xong')
+        """, (order_id,))
+        db.commit()
+    finally:
+        db.close()
+
+    return redirect('/myorders')
+
+
+@app.route('/confirm_payment/<int:order_id>', methods=['POST'])
+def confirm_payment(order_id):
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    db = get_db()
+
+    try:
+        # 1. Tính tổng tiền
+        order_data = db.execute("""
+            SELECT SUM(m.Gia * c.So_luong) as tong 
+            FROM Chi_tiet_don c 
+            JOIN Mon_an m ON c.id_mon = m.id_mon 
+            WHERE c.id_don = ?
+        """, (order_id,)).fetchone()
+
+        tong_tien = order_data['tong'] if order_data['tong'] else 0
+
+        # 2. Update trạng thái đơn cũ
+        db.execute("""
+            UPDATE Don_hang 
+            SET Trang_thai = 'Chưa xong' 
+            WHERE id_don = ?
+        """, (order_id,))
+
+        # 3. Lưu hóa đơn
+        db.execute("""
+            INSERT INTO Hoa_don (id_don, Tong_tien, Ngay) 
+            VALUES (?, ?, datetime('now', 'localtime'))
+        """, (order_id, tong_tien))
+
+        # tạo giỏ mới
+        db.execute("""
+            INSERT INTO Don_hang (id_kh, Trang_thai)
+            VALUES (?, 'cart')
+        """, (session.get('user_id'),))
+
+        db.commit()
+
+    except:
+        db.rollback()
+        return "Lỗi thanh toán"
+
+    finally:
+        db.close()
+
+    return redirect('/cart')
 
 @app.route('/password_manager', methods=['GET', 'POST'])
 def password_manager():
@@ -482,6 +608,3 @@ def password_manager():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-server = Server(app.wsgi_app)
-server.serve(debug=True)

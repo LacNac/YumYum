@@ -39,7 +39,7 @@ padding-left: 40px;
     cursor: pointer;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
 
     .menu-toggle {
         display: block;
@@ -49,7 +49,7 @@ padding-left: 40px;
         grid-template-columns: repeat(2, 1fr);
     }
 }
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
     .content_intro {
         flex-direction: column;
     }
@@ -62,11 +62,6 @@ padding-left: 40px;
 .nav-center li a {
     display: block;
     padding: 10px 15px;
-}
-@media (max-width: 600px) {
-    .list_menu {
-        grid-template-columns: 1fr;
-    }
 }
 
 .nav-center {
@@ -127,7 +122,7 @@ text-decoration: none;
     transition: all 0.3s ease;
 }
 .nav-a:visited {
-    color: inherit;
+    color: #002795;
 }
 .nav-a:hover {
 transform: translateY(-3px);
@@ -137,25 +132,28 @@ main {
 margin: 0px 208px;
 }
 
+/* Khung bao ngoài cùng của Slide */
 .food {
-        width: 100%;
-        height: 450px;
-        margin: 20px 0px 80px 0px;
-        position: relative;
-        overflow: hidden;
-        border-radius: 10px;
-        }
+    position: relative;
+    max-width: 1500px;
+    margin: 30px 0 90px 0;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+}
 
 .foods {
-        display: flex;
-        transition: 0.5s;
-        }
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
 
-        .foods img {
-        flex: 0 0 100%;
-        height: 100%;
-        object-fit: cover;
-        }
+.foods img {
+    width: 100%;
+    flex-shrink: 0;
+    height: 450px;
+    object-fit: cover;
+}
+
 .btn {
             position: absolute;
             top: 50%;
@@ -204,20 +202,24 @@ display: grid;
 grid-template-columns: repeat(4, 1fr);
 gap: 25px;
 }
+
 .div_menu {
     background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 10px;
+    border-radius: 15px;
     padding: 10px;
-    text-align: center; /* căn chữ + ảnh giữa ngang */
+    text-align: center;
 }
-
+.div_menu p {
+font-family: Times New Roman;
+font-size: 18px;
+}
 .div_menu img {
     width: 90%;
     height: 180px;
     object-fit: cover;
     border-radius: 15px;
     display: block;
-    margin: 0 auto;
+    margin: 15px auto auto auto;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 .link_menu {
@@ -231,6 +233,20 @@ width: fit-content;
 height: auto;
 border-radius: 20px;
 }
+@media (max-width: 1000px) {
+    .list_menu {
+    display: grid;
+        grid-template-columns: 1fr;
+        justify-content: center;
+    }
+    .div_menu {
+    width: 300px;
+    height: auto;
+    margin: 0 auto;
+
+    }
+}
+
 .our_menu {
 text-align: center;
 }
@@ -255,29 +271,34 @@ padding-bottom: 40px;
 margin-top: 80px;
 }
 .content_intro {
-    display: flex;
-    align-items: center;    /* Căn giữa chữ và ảnh theo chiều dọc */
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    align-items: center;
     justify-content: center;
-    gap: 60px;              /* Khoảng cách giữa chữ và ảnh */
-}
-.content_intro div {
-flex = 1;
+    gap: 40px;
 }
 
 /* Phần chữ */
-.content_intro h3 {
-    line-height: 1.8;
-    text-align: left;    /* Căn đều hai bên cho chuyên nghiệp */
+.text-2 {
+padding: 0 50px;
+}
+
+.content_intro p {
+    line-height: 1.5;
+    font-size: 32px;
+    font-family: Times New Roman;
+    color: black;
 }
 
 /* Phần ảnh */
 .content_intro img {
-    flex: 1;
-    max-width: 80%;         /* Để ảnh chiếm khoảng gần một nửa */
-    height: 400px;          /* Chiều cao cố định để ảnh đẹp hơn */
-    object-fit: cover;      /* Cắt ảnh vừa khung mà không bị méo */
-    border-radius: 20px;    /* Bo góc mềm mại */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    justify-content: center;
+    margin: 0 auto;
 }
 
 /* Nút bấm (nếu bạn có thêm thẻ a trong html) */
@@ -306,20 +327,22 @@ flex = 1;
 }
 
 /* Responsive cho điện thoại */
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
     .content_intro {
-        flex-direction: column; /* Xếp chồng ảnh và chữ lên nhau */
-        gap: 30px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 40px;
     }
 
-    .content_intro h3 {
-        font-size: 18px;
-        text-align: center;     /* Căn giữa chữ trên điện thoại */
+    .content_intro p {
+        font-size: 21px;
+        color: black;
     }
 
     .content_intro img {
-        max-width: 100%;        /* Ảnh rộng hết cỡ trên mobile */
+        width: 300px;
         height: 300px;
+        object-fit: cover;
     }
 
     .about_us_home .text {
