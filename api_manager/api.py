@@ -171,5 +171,41 @@ def dangki():
     conn.close()
     return jsonify({"message" : "ok"}), 201
 
+@app.route('/monan')
+def dsmonan():
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    cur.execute("""
+            select*from Mon_an
+            where trang_thai = 1
+        """)
+    food = [dict(f) for f in cur.fetchall()] 
+    conn.close()
+    return jsonify(food)
+
+@app.route('/xoamon/<int:id_mon>', methods=['POST'])
+def xoamonan(id_mon):
+    conn = sqlite3.connect(DATABASE)
+    cur = conn.cursor()
+    cur.execute("""UPDATE Mon_an
+SET trang_thai = 0
+where id_mon = ?""", (id_mon,))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "Deleted"})
+    
+@app.route('/themmon', methods=['POST'])
+def themonan():
+    data = request.json
+    conn = sqlite3.connect(DATABASE)
+    cur = conn.cursor()
+    cur.execute("""
+        INSERT INTO Mon_an (Ten_mon, Gia, Danh_muc, Anh, rating, so_luot, trang_thai)
+        VALUES (?, ?, ?, ?, 0, 0, 1)
+    """, (data['ten'], data['gia'], data['danhmuc'], data['anh']))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "Added"})
 if __name__ == '__main__':
     app.run(port=5001 ,debug=True)
