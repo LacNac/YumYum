@@ -7,9 +7,6 @@ app = Flask(__name__)
 app.secret_key = "abc123"  # bắt buộc để dùng session
 app.register_blueprint(manager_bp)
 
-@app.route('/Manager')
-
-
 @app.route('/')
 def index():
     return redirect('/home')
@@ -68,7 +65,7 @@ def update_menu(page=1, per_page=10, danh_muc=None, keyword=None):
 
     offset = (page - 1) * per_page
 
-    query = "SELECT * FROM Mon_an WHERE 1=1"
+    query = "SELECT * FROM Mon_an WHERE trang_thai =1"
     params = []
 
     # lọc theo danh mục
@@ -253,7 +250,7 @@ def cart():
         SELECT m.Ten_mon, m.Gia, c.So_luong, m.Anh, m.id_mon, m.Danh_muc
         FROM Chi_tiet_don c
         JOIN Mon_an m ON c.id_mon = m.id_mon
-        WHERE c.id_don = ?
+        WHERE c.id_don = ? 
     """, (id_don,)).fetchall()
 
     total = 0

@@ -14,6 +14,8 @@
     <a href="{{ url_for('manager.doanhthu') }}" {% if request.endpoint == 'manager.doanhthu' %}class="active"{% endif %}>Doanh Thu</a>
     <a href="{{ url_for('manager.deli') }}" {% if request.endpoint in ['manager.deli','manager.deli_chitiet'] %}class="active"{% endif %}>Giao Hàng</a>
     <a href="{{ url_for('manager.eatin') }}" {% if request.endpoint in ['manager.eatin','manager.eatin_chitiet'] %}class="active"{% endif %}>Tại Chỗ</a>
+    <a href="{{ url_for('manager.monan') }}">Món ăn</a>
+    <a href="{{ url_for('manager.themmon') }}">Thêm món</a>
     <a href="{{url_for('login')}}" >Log Out</a>
 </nav>
 

@@ -1,0 +1,41 @@
+<!-- templates/food_list.html -->
+{% extends 'basemanager.html' %}
+
+{% block title %}Danh sách món{% endblock %}
+
+{% block content %}
+<h2>Danh sách món ăn</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên</th>
+            <th>Giá</th>
+            <th>Danh mục</th>
+            <th>Đánh giá</th>
+            <th>Ảnh</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for f in foods %}
+        <tr>
+            <td>{{ f.id_mon }}</td>
+            <td>{{ f.Ten_mon }}</td>
+            <td>{{ f.Gia }}</td>
+            <td>{{ f.Danh_muc }}</td>
+            <td>{{ f.rating }}</td>
+            <td>
+              <img src="{{ url_for('static', filename='images/' + f.Anh) }}" width="80">            </td>
+            <td>
+                <form action="{{ url_for('manager.xoamon', id_mon=f.id_mon) }}" method="POST">
+                    <button type="submit" onclick="return confirm('Xóa món {{ f.id_mon }}?')">Xóa</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
